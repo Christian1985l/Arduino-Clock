@@ -1,0 +1,8 @@
+AH_74HC595  	KEYWORD1
+
+setValue	KEYWORD2
+setPin		KEYWORD2
+clear		KEYWORD2
+setAll		KEYWORD2
+shift		KEYWORD2
+
