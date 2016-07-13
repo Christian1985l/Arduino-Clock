@@ -13,7 +13,7 @@
 #define DHTTYPE DHT22   // DHT 22  (AM2302)
 
 //Initialisation
-AH_74HC595 shifter(SER_Pin, RCLK_Pin, SRCLK_Pin); 
+AH_74HC595 shifter(SER_Pin, RCLK_Pin, SRCLK_Pin);
 int a,hr,mi,i;
 int d[4];
 boolean val, sync;
@@ -23,15 +23,15 @@ DHT dht(DHTPIN, DHTTYPE);
 
 
 void setup(){
-  Serial.begin(9600); 
+  Serial.begin(9600);
   while (!Serial) ; // wait for serial
   delay(200);
   pinMode(5, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(6, INPUT);
-  
-  Timer1.initialize(5000); // 1 Sekunde (1000000), ab 5 ms kein flackern
+
+  Timer1.initialize(4000); // 1 Sekunde (1000000), ab 5 ms kein flackern
   Timer1.attachInterrupt(anzeige);
   digitalWrite(LED1, LOW);
   dht.begin();
@@ -44,12 +44,12 @@ void anzeige(){
     digitalWrite(7, HIGH);
     sync = false;
     pinMode(7, INPUT);
-  }  
+  }
   if (val == true){
     if (a>3){
       a=0;
     }
-    shifter.clear();  
+    shifter.clear();
   }else{
     if (a>3){
       a=0;
@@ -70,8 +70,7 @@ void loop(){
       val=true;
       d[i]=50;
   }
-  if (digitalRead(PIR) == HIGH)
-  {
+  if (digitalRead(PIR) == HIGH)  {
     val=false;
     for( i = 0; i < 4; i++ ){
       Time();
@@ -80,8 +79,8 @@ void loop(){
       Temp();
       digitalWrite(8, LOW);
       delay(3000);
-    } 
-  }    
+    }
+  }
 }
 
 void Time(){
@@ -92,7 +91,7 @@ void Time(){
     d[3] =  hr % 10;
     d[2] = (hr - d[3]) % 100 / 10;
     d[1] =  mi % 10;
-    d[0] = (mi - d[1]) % 100 / 10;}  
+    d[0] = (mi - d[1]) % 100 / 10;}
 }
 
 void Temp(){
@@ -109,4 +108,3 @@ void Temp(){
   d[1] = 12; // entspricht einem C auf der Anzeige
   d[0] = 50;
 }
-
