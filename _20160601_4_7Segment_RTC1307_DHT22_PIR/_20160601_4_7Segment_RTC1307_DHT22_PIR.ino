@@ -16,6 +16,7 @@
 AH_74HC595 shifter(SER_Pin, RCLK_Pin, SRCLK_Pin);
 int a,hr,mi,i;
 int d[4];
+char b[4];
 boolean val, sync;
 int LED1=5;
 int PIR = 6;
@@ -58,7 +59,7 @@ void anzeige(){
       shifter.showNumber(d[a]);
     }
     else{
-      shifter.setValue(B11100011);
+      shifter.setValue(b[a]);
     }}
   digitalWrite(LED1, !digitalRead(LED1)); // Pin LED 1 wechselt den Zustand (toggle)
   a++;
@@ -78,6 +79,8 @@ void loop(){
       delay(3000);
       Temp();
       digitalWrite(8, LOW);
+      delay(3000);
+      Humidity();
       delay(3000);
     }
   }
@@ -107,4 +110,22 @@ void Temp(){
   d[2] = ((int) t - d[3]) % 100 / 10;
   d[1] = 12; // entspricht einem C auf der Anzeige
   d[0] = 50;
+  b[0]=B11100011;
+}
+
+void Humidity(){
+  // Reading temperature or humidity takes about 250 milliseconds!
+  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  float h = dht.readHumidity();
+  // Read temperature as Celsius
+  float t = dht.readTemperature();
+  if (isnan(h) || isnan(t)) {
+    return;
+  }
+  d[3] = 50; // entspricht einem C auf der Anzeige
+  d[2] = 50;
+  b[2]=B10000000;
+  b[3]=B11110110;
+  d[1] =  (int) h % 10;
+  d[0] = ((int) h - d[1]) % 100 / 10;
 }
