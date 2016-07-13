@@ -14,7 +14,7 @@
 
 //Initialisation
 AH_74HC595 shifter(SER_Pin, RCLK_Pin, SRCLK_Pin);
-int a,hr,mi,i;
+int a,hr,mi,i, dy, mo;
 int d[4];
 char b[4];
 boolean val, sync;
@@ -77,13 +77,27 @@ void loop(){
       Time();
       digitalWrite(8, HIGH);
       delay(3000);
-      Temp();
+      Date();
       digitalWrite(8, LOW);
+      delay(3000);
+      Temp();
       delay(3000);
       Humidity();
       delay(3000);
     }
   }
+}
+
+
+void Date(){
+  tmElements_t tm;
+    if (RTC.read(tm)) {
+    dy = tm.Day;
+    mo = tm.Month;
+    d[3] =  dy % 10;
+    d[2] = (dy - d[3]) % 100 / 10;
+    d[1] =  mo % 10;
+    d[0] = (mo - d[1]) % 100 / 10;}
 }
 
 void Time(){
